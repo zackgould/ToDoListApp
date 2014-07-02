@@ -1,0 +1,35 @@
+﻿<viewdata model="ToDoWebsite.HelloWorld.HelloWorldViewModel" />
+<!DOCTYPE>
+<html>
+	<body>
+	<h1>Hello, ${Model.Name.ToUpper()}!</h1>
+
+    <form method="post" action="hello">
+      <span>Age:</span>
+      <input type="text" name="Age" />
+      <input type="submit" value="Go!" />
+    </form>
+
+    <ol>
+      Example ToDoList
+
+      <li>
+        ToDoItem1
+        <form method="post" action="del">
+          <input type="text" name="Item" value="ToDoItem1" />
+          <input type="submit" value="Delete" />
+        </form>
+      </li>
+
+      <li>
+        ToDoItem2
+        <form method="post" action="del">
+          <input type="text" name="Item" value="ToDoItem2" />
+          <input type="submit" value="Delete" />
+        </form>
+      </li>
+
+    </ol>
+    
+	</body>
+</html>

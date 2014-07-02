@@ -1,0 +1,25 @@
+﻿<viewdata model="ToDoWebsite.ToDo.ToDoListViewModel" />
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>My Applications</title>
+  </head>
+  <body>
+    <h1>Welcome To The To Do List Application!</h1>
+
+    <form method="post" action="to">
+      <input type="text" name="Item" placeholder="Enter Item" />
+      <input type="submit" value="Submit"  />
+    </form>
+    <h2>Your To Do List</h2>
+    <ol>
+      <li each="var item in Model.ToDoList">
+        <form method="post" action="completed">
+          ${item}
+          <input type="hidden" name="Item" value="${item}" />
+          <input type="submit" value="Remove" />
+        </form>
+      </li>
+    </ol>
+  </body>
+</html>
