@@ -33,18 +33,21 @@ namespace ToDoWebsite.ToDo
 
         public FubuContinuation post_To(ToDoListPostInputModel inputModel)
         {
-            var item = inputModel.Item;
+            var item = inputModel.DeleteItem;
+            var linesToAdd = File.ReadAllLines(path).ToList();
             
-            // This text is always added, making the file longer over time 
-            string appendText = item + Environment.NewLine;
-            File.AppendAllText(path, appendText);
-
+            if (!linesToAdd.Contains(item))
+            {
+                // This text is always added, making the file longer over time 
+                string appendText = item + Environment.NewLine;
+                File.AppendAllText(path, appendText);
+            }
             return FubuContinuation.RedirectTo<ToDoListInputModel>();
         }
 
         public FubuContinuation post_Removed(ToDoListPostInputModel inputModel)
         {
-                var left = inputModel.Item;
+                var left = inputModel.DeleteItem;
            
                 var tempFile = Path.GetTempFileName();
 
@@ -62,22 +65,22 @@ namespace ToDoWebsite.ToDo
 
         public FubuContinuation post_Edited(ToDoListPostInputModel inputModel)
         {
-            var left = inputModel.Item;
-            var right = inputModel.Mod;
+            var rightleft = inputModel.CompareItem;
+            var right = inputModel.ModItem;
+            var linesToReplace = File.ReadAllLines(path).ToList();
 
-            var tempFile = Path.GetTempFileName();
-            if (left != right)
+            if (!linesToReplace.Contains(right))
             {
-
-                var linesToReplace = File.ReadAllLines(path).ToList();
-                var index = linesToReplace.IndexOf(left);
-                linesToReplace.Remove(left);
+               
+                var tempFile = Path.GetTempFileName();
+                var index = linesToReplace.IndexOf(rightleft);
+                linesToReplace.RemoveAt(index);
                 linesToReplace.Insert(index, right);
                 File.WriteAllLines(tempFile, linesToReplace);
-
                 File.Delete(path);
                 File.Move(tempFile, path);
             }
+
             return FubuContinuation.RedirectTo<ToDoListInputModel>();
         }
 
@@ -94,8 +97,9 @@ namespace ToDoWebsite.ToDo
 
      public class ToDoListPostInputModel
     {
-        public string Item { get; set; }
-        public string Mod { get; set; }
+        public string DeleteItem { get; set; }
+        public string CompareItem { get; set; }
+        public string ModItem { get; set; }
 
     }
 

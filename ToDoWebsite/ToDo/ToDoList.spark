@@ -8,6 +8,7 @@
     </style>
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
     <script>
+      
       $(document).ready(function(){
 
       $("input[class=left]").hide();
@@ -58,7 +59,7 @@
     <h1>Welcome To The To Do List Application!</h1>
 
     <form method="post" action="to">
-      <input type="text" name="Item" placeholder="Enter Item" />
+      <input type="text" name="DeleteItem" placeholder="Enter Item" />
       <input type="submit" value="Submit"  />
     </form>
     <h2>Your To Do List</h2>
@@ -66,12 +67,12 @@
       <li each="var item in Model.ToDoList">
         <form method="post" action="removed">
           <span>${item}</span>
-          <input class="left" type="text" name="Item" value="${item}" />
+          <input class="left" type="text" name="DeleteItem" value="${item}" />
           <input class="remove" type="submit" value="Remove" />
         </form>
         <form class="two" method="post" action="edited">
-          <input class="left" type="text" name="Item" value="${item}" />
-          <input class="right" type="text" name="Mod" value="${item}" />
+          <input class="left" type="text" name="CompareItem" value="${item}" />
+          <input class="right" type="text" name="ModItem" value="${item}" />
           <input class="save" type="submit" value="Save" />
         </form>
       </li>
