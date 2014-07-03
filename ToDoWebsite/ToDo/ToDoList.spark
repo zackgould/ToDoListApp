@@ -3,6 +3,56 @@
 <html>
   <head>
     <title>My Applications</title>
+    <style type="text/css">
+      form { display: inline }
+    </style>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script>
+      $(document).ready(function(){
+
+      $("input[class=left]").hide();
+      $("input[class=right]").hide();
+      $("input[class=save]").hide();
+
+
+
+      $("span").click(function(){
+      $(this).hide();
+      $(this).parent().children(".remove").hide();
+      $(this).parent().next().find(".right").show();
+      $(this).parent().next().find(".save").show();
+
+
+      $("span").click(function(){
+      $("span").show();
+      $("span").parent().children(".remove").show();
+      $("span").parent().next().find(".right").hide();
+      $("span").parent().next().find(".save").hide();
+
+      $(this).hide();
+      $(this).parent().children(".remove").hide();
+      $(this).parent().next().find(".right").show();
+      $(this).parent().next().find(".save").show();
+
+      });
+      });
+
+      $('div#parent div:last').each(function() {
+      var p = $(this).parent();
+      $(this).height(p.height() - ($(this).offset().top - p.offset().top));
+      });
+
+      $("div").click(function(){
+      $("span").show();
+      $("input[class=right]").hide();
+      $("input[class=save]").hide();
+      $("input[class=remove]").show();
+
+
+      });
+
+      });
+    </script>
   </head>
   <body>
     <h1>Welcome To The To Do List Application!</h1>
@@ -14,12 +64,20 @@
     <h2>Your To Do List</h2>
     <ol>
       <li each="var item in Model.ToDoList">
-        <form method="post" action="completed">
-          ${item}
-          <input type="hidden" name="Item" value="${item}" />
-          <input type="submit" value="Remove" />
+        <form method="post" action="removed">
+          <span>${item}</span>
+          <input class="left" type="text" name="Item" value="${item}" />
+          <input class="remove" type="submit" value="Remove" />
+        </form>
+        <form class="two" method="post" action="edited">
+          <input class="left" type="text" name="Item" value="${item}" />
+          <input class="right" type="text" name="Mod" value="${item}" />
+          <input class="save" type="submit" value="Save" />
         </form>
       </li>
     </ol>
+    <div style="height:750px">
+      <div></div>
+    </div>
   </body>
 </html>
