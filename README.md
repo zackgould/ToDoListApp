@@ -1,1 +1,1 @@
-My To Do List App Strictly Using HTML and C#
+My To Do List App Using HTML, C#, jQuery, and JSON.
