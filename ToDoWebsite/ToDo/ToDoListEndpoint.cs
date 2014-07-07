@@ -1,14 +1,21 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using FubuMVC.Core.Continuations;
 using System.IO;
+using FubuMVC.Core.Runtime;
 
 namespace ToDoWebsite.ToDo
 {
+
     public class ToDoEndpoint
     {
+        private readonly IFubuRequest _fubuRequest;
         private const string path = @"C:\Users\zackgoul\Desktop\ExtendHealth\C#\ToDo\ToDo.txt";
+
+        public ToDoEndpoint(IFubuRequest fubuRequest)
+        {
+            _fubuRequest = fubuRequest;
+        }
 
         public ToDoListViewModel get_To(ToDoListInputModel inputModel)
         {
@@ -84,6 +91,19 @@ namespace ToDoWebsite.ToDo
             return FubuContinuation.RedirectTo<ToDoListInputModel>();
         }
 
+        public FubuContinuation post_SortList(JsonResult inputModel)
+        {
+            var tempFile = Path.GetTempFileName();
+           var listItems = inputModel.arrayToDo;
+           // Persist to file
+           File.WriteAllLines(tempFile, listItems);
+
+           File.Delete(path);
+           File.Move(tempFile, path);
+
+           return FubuContinuation.RedirectTo<ToDoListInputModel>();
+        }
+
     }
 
     public class ToDoListViewModel
@@ -102,5 +122,10 @@ namespace ToDoWebsite.ToDo
         public string ModItem { get; set; }
 
     }
+
+     public class JsonResult  // this class represents the "/to" URL
+     {
+         public string[] arrayToDo { get; set; }
+     }
 
 }

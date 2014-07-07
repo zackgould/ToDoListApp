@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+  <metadata>
+    <id>FubuJson</id>
+    <version>0.2.0.337</version>
+    <authors>Joshua Arnold,  Jeremy Miller,  et al.</authors>
+    <owners>Joshua Arnold,  Jeremy Miller,  et al.</owners>
+    <licenseUrl>https://github.com/DarthFubuMVC/fubumvc/raw/master/license.txt</licenseUrl>
+    <projectUrl>http://mvc.fubu-project.org/</projectUrl>
+    <iconUrl>https://github.com/DarthFubuMVC/fubu-collateral/raw/master/Icons/FubuMvc_256.png</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>JSON.NET helpers for use with FubuCore binding.</description>
+    <tags>fubumvc json modelbinding</tags>
+    <dependencies>
+      <dependency id="FubuCore" version="0.9.9.157" />
+      <dependency id="Newtonsoft.Json" version="4.0.8" />
+    </dependencies>
+  </metadata>
+</package>

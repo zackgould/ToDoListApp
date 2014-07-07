@@ -1,5 +1,5 @@
-﻿<viewdata model="ToDoWebsite.ToDo.ToDoListViewModel" />
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
+<viewdata model="ToDoWebsite.ToDo.ToDoListViewModel" />
 <html>
   <head>
     <title>My Applications</title>
@@ -7,8 +7,10 @@
       form { display: inline }
     </style>
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-    <script>
-      
+    <link rel="stylesheet" href="//ajax.googleapis.com/ajax/libs/jqueryui/1.11.0/themes/smoothness/jquery-ui.css" />
+    <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.11.0/jquery-ui.min.js"></script>
+    <script type="text/javascript">
+
       $(document).ready(function(){
 
       $("input[class=left]").hide();
@@ -38,6 +40,28 @@
       });
       });
 
+
+      $(function() {
+      $( "#sortable" ).sortable({
+      update: function() { send(); }
+      });
+      $( "#sortable" ).disableSelection();
+      });
+
+      function send() {
+
+      var arrayToDo = [];
+      $("#sortable span").each(function() { arrayToDo.push($(this).text()) });
+
+      $.ajax({
+      url: '/SortList',
+      type: 'post',
+      contentType: "application/json",
+      dataType: "json",
+      data: JSON.stringify({ arrayToDo: arrayToDo })
+
+      });
+      }
       $('div#parent div:last').each(function() {
       var p = $(this).parent();
       $(this).height(p.height() - ($(this).offset().top - p.offset().top));
@@ -63,7 +87,7 @@
       <input type="submit" value="Submit"  />
     </form>
     <h2>Your To Do List</h2>
-    <ol>
+    <ol id="sortable">
       <li each="var item in Model.ToDoList">
         <form method="post" action="removed">
           <span>${item}</span>
