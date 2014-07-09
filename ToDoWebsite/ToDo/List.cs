@@ -6,6 +6,8 @@ namespace ToDoWebsite.ToDo
     {
         public List<string> myList = new List<string>();
 
+        public string Id { get; set; }
+
         public void add(string item)
         {
             myList.Add(item);
@@ -27,7 +29,6 @@ namespace ToDoWebsite.ToDo
             myList.Clear();
             myList.AddRange(order);
         }
-
     }
 }
 

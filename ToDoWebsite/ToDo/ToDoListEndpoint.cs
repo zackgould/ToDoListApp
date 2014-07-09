@@ -1,43 +1,46 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics.Eventing.Reader;
 using FubuMVC.Core.Continuations;
 using FubuMVC.Core.Runtime;
+using Raven.Client;
+using Raven.Client.Document;
 
 namespace ToDoWebsite.ToDo
 {
-
     public class ToDoEndpoint
     {
-        private readonly ISessionState _session;
+        public static DocumentStore Store = new DocumentStore { ConnectionStringName = "RavenDB" };
         private const string path = @"C:\Users\zackgoul\Desktop\ExtendHealth\C#\ToDo\ToDo.txt";
-
-        public ToDoEndpoint(ISessionState session)
-        {
-            _session = session;
-        }
 
         public ToDoListViewModel get_To(ToDoListInputModel inputModel)
         {
-            var toDoList = _session.Get<List>();
-
-            if (toDoList == null)
+            Store.Initialize();
+            using (IDocumentSession session = Store.OpenSession())
             {
-                toDoList = new List();
-                _session.Set(toDoList);
+                var toDoList = session.Load<List>("1");
+                if (toDoList == null)
+                {
+                    toDoList = new List{Id = "1"};
+                    session.Store(toDoList);
+                    session.SaveChanges();
+                }
+                var viewModel = new ToDoListViewModel {ToDoList = toDoList.myList};
+                return viewModel;
             }
-
-            var viewModel = new ToDoListViewModel { ToDoList = toDoList.myList };
-
-            return viewModel;
         }
 
         public FubuContinuation post_To(ToDoListPostInputModel inputModel)
         {
             var item = inputModel.AddItem;
 
-            var toDoList = _session.Get<List>();
+            using (IDocumentSession session = Store.OpenSession())
+            {
+                var toDoList = session.Load<List>("1");
 
-            toDoList.add(item);
-
+                toDoList.add(item);
+                session.Store(toDoList);
+                session.SaveChanges();
+            }
             return FubuContinuation.RedirectTo<ToDoListInputModel>();
         }
 
@@ -45,8 +48,14 @@ namespace ToDoWebsite.ToDo
         {
             var left = inputModel.DeleteItem;
 
-            var toDoList = _session.Get<List>();
-            toDoList.delete(left);
+            using (IDocumentSession session = Store.OpenSession())
+            {
+                var toDoList = session.Load<List>("1");
+
+                toDoList.delete(left);
+                session.Store(toDoList);
+                session.SaveChanges();
+            }
 
             return FubuContinuation.RedirectTo<ToDoListInputModel>();
         }
@@ -56,8 +65,14 @@ namespace ToDoWebsite.ToDo
             var rightleft = inputModel.CompareItem;
             var right = inputModel.ModItem;
 
-            var toDoList = _session.Get<List>();
-            toDoList.modify(rightleft, right);
+            using (IDocumentSession session = Store.OpenSession())
+            {
+                var toDoList = session.Load<List>("1");
+
+                toDoList.modify(rightleft, right);
+                session.Store(toDoList);
+                session.SaveChanges();
+            }
 
             return FubuContinuation.RedirectTo<ToDoListInputModel>();
         }
@@ -66,12 +81,17 @@ namespace ToDoWebsite.ToDo
         {
             var order = inputModel.arrayToDo;
 
-            var toDoList = _session.Get<List>();
-            toDoList.sort(order);
+            using (IDocumentSession session = Store.OpenSession())
+            {
+                var toDoList = session.Load<List>("1");
+
+                toDoList.sort(order);
+                session.Store(toDoList);
+                session.SaveChanges();
+            }
 
             return FubuContinuation.RedirectTo<ToDoListInputModel>();
         }
-
     }
 
     public class ToDoListViewModel
@@ -98,7 +118,6 @@ namespace ToDoWebsite.ToDo
         public string CompareItem { get; set; }
         public string ModItem { get; set; }
     }
-
 
     public class JsonResult  // this class represents the "/to" URL
     {
