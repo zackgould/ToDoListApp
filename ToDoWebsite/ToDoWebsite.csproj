@@ -142,6 +142,7 @@
     <Compile Include="ConfigureFubuMVC.cs" />
     <Compile Include="HelloWorld\HelloWorldEndpoint.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ToDo\List.cs" />
     <Compile Include="ToDo\ToDoListEndpoint.cs" />
   </ItemGroup>
   <ItemGroup>

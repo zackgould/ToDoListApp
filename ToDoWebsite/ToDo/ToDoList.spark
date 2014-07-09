@@ -83,7 +83,7 @@
     <h1>Welcome To The To Do List Application!</h1>
 
     <form method="post" action="to">
-      <input type="text" name="DeleteItem" placeholder="Enter Item" />
+      <input type="text" name="AddItem" placeholder="Enter Item" />
       <input type="submit" value="Submit"  />
     </form>
     <h2>Your To Do List</h2>
