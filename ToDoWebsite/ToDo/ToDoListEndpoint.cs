@@ -30,7 +30,7 @@ namespace ToDoWebsite.ToDo
             if (String.IsNullOrEmpty(text))
                 return String.Empty;
 
-            using (var sha1 = new System.Security.Cryptography.SHA1Managed())
+            using (var sha1 = new SHA1Managed())
             {
                 byte[] textData = Encoding.UTF8.GetBytes(text);
 
@@ -69,6 +69,9 @@ namespace ToDoWebsite.ToDo
                 {
                     return FubuContinuation.RedirectTo<LoginInputModel>();
                 }
+
+                
+
                 return FubuContinuation.RedirectTo(new ToDoListInputModel {Username = name});
             }
 
