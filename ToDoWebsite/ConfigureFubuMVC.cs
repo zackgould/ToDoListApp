@@ -8,7 +8,7 @@ namespace ToDoWebsite
         public ConfigureFubuMVC()
         {
             // As is, this will be using all the default conventions and policies
-            Routes.HomeIs<ToDoListInputModel>();
+            Routes.HomeIs<LoginInputModel>();
         }
     }
 }
