@@ -4,7 +4,9 @@ using System.Diagnostics.Eventing.Reader;
 using System.Linq;
 using System.Net;
 using System.Net.Mail;
+using System.Runtime.InteropServices;
 using System.Security.Cryptography;
+using System.Security.Cryptography.X509Certificates;
 using System.Security.Policy;
 using System.ServiceModel.Web;
 using System.Text;
@@ -52,15 +54,22 @@ namespace ToDoWebsite.ToDo
                 return new LoginViewModel();
             }
 
-            public FubuContinuation post_Login(RegisterPostInputModel inputModel)
+            public FubuContinuation post_Login(LoginPostInputModel inputModel)
             {
                 Store.Initialize();
                 IDocumentSession _session = Store.OpenSession();
 
                 var name = inputModel.Username;
+
+                if (name == "")
+                {
+                    return FubuContinuation.RedirectTo<LoginInputModel>();
+
+                }
+
                 var password = GetStringSha1Hash(inputModel.Password);
 
-                var user = _session.Query<Person>().Where(u => u.Id == name && u.Password == password).ToList();
+                var user = _session.Query<Person>().Where(u => (u.Id == name || u.Name == name) && u.Password == password).ToList();
 
                 // using (IDocumentSession session = Store.OpenSession())
                 //{
@@ -70,8 +79,9 @@ namespace ToDoWebsite.ToDo
                     return FubuContinuation.RedirectTo<LoginInputModel>();
                 }
 
+               // var person = _session.Load<Person>(name);
+               // var dbname = person.Name;
                 
-
                 return FubuContinuation.RedirectTo(new ToDoListInputModel {Username = name});
             }
 
@@ -83,8 +93,18 @@ namespace ToDoWebsite.ToDo
 
             public FubuContinuation post_Emessage(ResetPasswordPostInputModel inputModel)
             {
+                Store.Initialize();
+                IDocumentSession _session = Store.OpenSession();
                 var what = inputModel.Internet;
-                var username = inputModel.User;
+
+                if (what == "")
+                {
+                    return FubuContinuation.RedirectTo<ResetPasswordInputModel>();
+                }
+
+                var person = _session.Load<Person>(what);
+                var usersName = person.Name;
+
                 RandomNumberGenerator rng = new RNGCryptoServiceProvider();
                 Byte[] bytes = new Byte[8];
                 rng.GetBytes(bytes);
@@ -92,21 +112,20 @@ namespace ToDoWebsite.ToDo
                 sendThisInEmailAndStoreInDB = GetStringSha1Hash(sendThisInEmailAndStoreInDB);
 
                 MailMessage msg = new MailMessage();
-                msg.From = new MailAddress("goulrz13@gmail.com");
+                msg.From = new MailAddress("goulrz13@wfu.edu");
                 msg.To.Add(what);
-                msg.Body = "Testing the automatic mail. Your temp password is: " + sendThisInEmailAndStoreInDB;
+                msg.Body = "<p>Hi there, " + usersName + "!</p> " +
+                "<p>We're sorry your password needed to be reset. " +
+                "In the meantime, use this temporary password to complete the reset process: " + sendThisInEmailAndStoreInDB + "</p>" +
+                "<p> Thanks for being such a great user!</p> <p>Sincerely, </p> The To Do List Web Application Team";
                 msg.IsBodyHtml = true;
-                msg.Subject = "Password Reset";
+                msg.Subject = "Your To Do List Password Reset";
                 SmtpClient smt = new SmtpClient("smtp.gmail.com");
                 smt.Port = 587;
                 smt.Credentials = new NetworkCredential("goulrz13@wfu.edu", "Cyclocross1#");
                 smt.EnableSsl = true;
                 smt.Send(msg);
 
-                Store.Initialize();
-                IDocumentSession _session = Store.OpenSession();
-
-                var person = _session.Load<Person>(username);
                 person.Password = sendThisInEmailAndStoreInDB;
                 _session.SaveChanges();
 
@@ -129,6 +148,11 @@ namespace ToDoWebsite.ToDo
                 var user = inputModel.User;
                 var temp = inputModel.TempPassword;
                 var newPass = inputModel.NewPassword;
+
+                if (user == "" || temp == "" || newPass == "")
+                {
+                    return FubuContinuation.RedirectTo<NewPasswordInputModel>();
+                }
 
                 Store.Initialize();
                 IDocumentSession _session = Store.OpenSession();
@@ -161,9 +185,17 @@ namespace ToDoWebsite.ToDo
                 Store.Initialize();
                 IDocumentSession _session = Store.OpenSession();
 
-                var user = inputModel.Username;
+                var user = inputModel.Name;
                 var email = inputModel.Email;
+
+
                 var password = GetStringSha1Hash(inputModel.Password);
+
+
+                if (user == "" || email == "" || password == "")
+                {
+                    return FubuContinuation.RedirectTo<RegistrationInputModel>();
+                }
 
                 // using (IDocumentSession session = Store.OpenSession())
                 //  {
@@ -172,7 +204,7 @@ namespace ToDoWebsite.ToDo
                 if (person == null)
                 {
 
-                    person = new Person {Id = user, Email = email, Password = password};
+                    person = new Person {Id = email, Name = user, Password = password};
 
                     _session.Store(person);
                     _session.SaveChanges();
@@ -185,7 +217,6 @@ namespace ToDoWebsite.ToDo
 
         public class ToDoEndpoint
         {
-
             public ToDoListViewModel get_To(ToDoListInputModel inputModel)
             {
 
@@ -193,8 +224,12 @@ namespace ToDoWebsite.ToDo
                 IDocumentSession _session = Store.OpenSession();
 
                 var user = inputModel.Username;
+                var person = _session.Load<Person>(user);
+                string encodedEmail = Uri.EscapeDataString(user);
+                //var person = _session.Load<Person>(user);
+              //  var dbname = person.Name;
 
-                var toDoList = _session.Load<Person>(user);
+              //  var toDoList = _session.Load<Person>(user);
 
                 //using (IDocumentSession session = Store.OpenSession())
                 //{
@@ -208,8 +243,8 @@ namespace ToDoWebsite.ToDo
                 //   }
                 var viewModel = new ToDoListViewModel
                 {
-                    ToDoList = toDoList.myList,
-                    Username = user
+                    ToDoList = person.myList,
+                    Username = encodedEmail
                 };
                 return viewModel;
             }
@@ -223,16 +258,21 @@ namespace ToDoWebsite.ToDo
 
                 var cuurentRequest = HttpContext.Current.Request.Url.ToString();
 
-                var user = cuurentRequest.Substring(cuurentRequest.LastIndexOf('=') + 1);
+                var estring = cuurentRequest.Substring(cuurentRequest.LastIndexOf('=') + 1);
+
+                var user = Uri.UnescapeDataString(estring);
 
                 //using (IDocumentSession session = Store.OpenSession())
                 //{
                 var toDoList = _session.Load<Person>(user);
 
+                if (!toDoList.myList.Contains(item) && item != "") { 
+
                 toDoList.add(item);
                 _session.Store(toDoList);
                 _session.SaveChanges();
-                // }
+
+                 }
                 return FubuContinuation.RedirectTo(new ToDoListInputModel {Username = user});
             }
 
@@ -246,7 +286,9 @@ namespace ToDoWebsite.ToDo
 
                 var cuurentRequest = HttpContext.Current.Request.Url.ToString();
 
-                var user = cuurentRequest.Substring(cuurentRequest.LastIndexOf('=') + 1);
+                var estring = cuurentRequest.Substring(cuurentRequest.LastIndexOf('=') + 1);
+
+                var user = Uri.UnescapeDataString(estring);
 
                 // using (IDocumentSession session = Store.OpenSession())
                 // {
@@ -270,16 +312,19 @@ namespace ToDoWebsite.ToDo
 
                 var cuurentRequest = HttpContext.Current.Request.Url.ToString();
 
-                var user = cuurentRequest.Substring(cuurentRequest.LastIndexOf('=') + 1);
+                var estring = cuurentRequest.Substring(cuurentRequest.LastIndexOf('=') + 1);
+
+                var user = Uri.UnescapeDataString(estring);
 
                 //  using (IDocumentSession session = Store.OpenSession())
                 // {
                 var toDoList = _session.Load<Person>(user);
-
+                
+                if (!toDoList.myList.Contains(right) && right != "") {
                 toDoList.modify(rightleft, right);
                 _session.Store(toDoList);
                 _session.SaveChanges();
-                //  }
+                  }
 
                 return FubuContinuation.RedirectTo(new ToDoListInputModel {Username = user});
             }
@@ -293,7 +338,9 @@ namespace ToDoWebsite.ToDo
 
                 var cuurentRequest = HttpContext.Current.Request.Url.ToString();
 
-                var user = cuurentRequest.Substring(cuurentRequest.LastIndexOf('=') + 1);
+                var estring = cuurentRequest.Substring(cuurentRequest.LastIndexOf('=') + 1);
+
+                var user = Uri.UnescapeDataString(estring);
 
                 //  using (IDocumentSession session = Store.OpenSession())
                 //  {
@@ -347,10 +394,16 @@ namespace ToDoWebsite.ToDo
 
     }
 
+    public class LoginPostInputModel
+    {
+        public string Password { get; set; }
+        public string Username { get; set; }
+    }
+
     public class RegisterPostInputModel
     {
-        public string Username { get; set; }
         public string Password { get; set; }
+        public string Name { get; set; }
         public string Email { get; set; }
     }
 
