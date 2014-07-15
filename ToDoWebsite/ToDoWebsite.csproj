@@ -148,6 +148,7 @@
     <Reference Include="StructureMap">
       <HintPath>..\packages\structuremap.2.6.3\lib\StructureMap.dll</HintPath>
     </Reference>
+    <Reference Include="System.Activities" />
     <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.Data.Services.Client" />
     <Reference Include="System.Security" />

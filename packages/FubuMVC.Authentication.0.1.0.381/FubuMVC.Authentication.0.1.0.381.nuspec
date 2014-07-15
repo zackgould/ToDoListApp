@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+  <metadata>
+    <id>FubuMVC.Authentication</id>
+    <version>0.1.0.381</version>
+    <authors>Jeremy Miller,  Joshua Arnold</authors>
+    <owners>Jeremy Miller,  Joshua Arnold</owners>
+    <licenseUrl>https://github.com/DarthFubuMVC/fubumvc/raw/master/license.txt</licenseUrl>
+    <projectUrl>http://mvc.fubu-project.org/</projectUrl>
+    <iconUrl>https://github.com/DarthFubuMVC/fubu-collateral/raw/master/Icons/FubuMvc_256.png</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Extensible authentication behaviors (with sensible defaults) for your FubuMVC application.</description>
+    <tags>fubumvc authentication</tags>
+    <dependencies>
+      <dependency id="FubuMVC.ContentExtensions" version="0.1.0.146" />
+    </dependencies>
+  </metadata>
+</package>

@@ -9,6 +9,7 @@ namespace ToDoWebsite
         {
             // As is, this will be using all the default conventions and policies
             Routes.HomeIs<LoginInputModel>();
+            
         }
     }
 }

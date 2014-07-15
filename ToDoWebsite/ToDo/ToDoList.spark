@@ -465,15 +465,15 @@ input[type=submit]:active {
 
       function send() {
 
-      var arrayToDo = [];
-      $("#sortable span").each(function() { arrayToDo.push($(this).text()) });
+      var ArrayToDo = [];
+      $("#sortable span").each(function() { ArrayToDo.push($(this).text()) });
 
       $.ajax({
       url: 'SortList/?Username=${Model.Username}',
       type: 'post',
       contentType: "application/json",
       dataType: "json",
-      data: JSON.stringify({ arrayToDo: arrayToDo })
+      data: JSON.stringify({ ArrayToDo: ArrayToDo })
 
       });
       }
