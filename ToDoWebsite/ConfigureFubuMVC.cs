@@ -1,4 +1,5 @@
 using FubuMVC.Core;
+using FubuMVC.Core.Continuations;
 using FubuPersistence.RavenDb;
 using StructureMap.Configuration.DSL;
 using ToDoWebsite.Behaviors;
@@ -14,8 +15,7 @@ namespace ToDoWebsite
             Routes.HomeIs<LoginInputModel>();
             
             Policies.Add<RavenSessionPolicy>();
-
-            
+            Policies.Add<AuthenticatedPolicy>();
         }
     }
 
@@ -23,6 +23,9 @@ namespace ToDoWebsite
     {
         public StructureMapRegistry()
         {
+            For<IEncryptionService>().Use<EncryptionService>();
+            For<IContinuationDirector>().Use<ContinuationHandler>();
+
             Scan(s =>
             {
                 s.TheCallingAssembly();

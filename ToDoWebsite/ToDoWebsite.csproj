@@ -188,8 +188,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\FubuMVC.cs" />
+    <Compile Include="Behaviors\AuthenticatedBehavior.cs" />
     <Compile Include="Behaviors\RavenSessionBehavior.cs" />
     <Compile Include="ConfigureFubuMVC.cs" />
+    <Compile Include="EncryptionService.cs" />
     <Compile Include="HelloWorld\HelloWorldEndpoint.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SettingsConvention.cs" />
