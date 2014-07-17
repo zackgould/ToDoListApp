@@ -195,6 +195,7 @@
     <Compile Include="HelloWorld\HelloWorldEndpoint.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SettingsConvention.cs" />
+    <Compile Include="ToDo\FailedLoginEnpoint.cs" />
     <Compile Include="ToDo\IRequireAuthentication.cs" />
     <Compile Include="ToDo\List.cs" />
     <Compile Include="ToDo\LoginEndpoint.cs" />
@@ -211,6 +212,7 @@
     <Content Include="ToDo\Registration.spark" />
     <Content Include="ToDo\ResetPassword.spark" />
     <Content Include="ToDo\NewPassword.spark" />
+    <Content Include="ToDo\FailedLogin.spark" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

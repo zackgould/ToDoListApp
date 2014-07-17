@@ -523,8 +523,9 @@ input[type=submit]:active {
     </section>
 	<section class="about">
     <p class="about-author">
-	  <form method="post" action="login">
+	  <form method="post" action="invalid">
           <input  type="submit" value="Logout" />
+		  </form>
   </section>
 	<section class="aboutme">
     <p class="about-author">

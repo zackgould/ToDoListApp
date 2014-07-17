@@ -40,7 +40,7 @@ namespace ToDoWebsite.ToDo
 
             if (name == "")
             {
-                return FubuContinuation.RedirectTo<LoginInputModel>();
+                return FubuContinuation.RedirectTo<FailedLoginInputModel>();
             }
 
             var password = _encryptionService.GetStringSha1Hash(inputModel.Password);
@@ -49,7 +49,7 @@ namespace ToDoWebsite.ToDo
 
             if (user.Count == 0)
             {
-                return FubuContinuation.RedirectTo<LoginInputModel>();
+                return FubuContinuation.RedirectTo<FailedLoginInputModel>();
             }
 
             var cookie = new Cookie(AuthCookieName, _encryptionService.EncryptUsername(name))
