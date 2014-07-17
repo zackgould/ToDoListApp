@@ -195,8 +195,12 @@
     <Compile Include="HelloWorld\HelloWorldEndpoint.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SettingsConvention.cs" />
+    <Compile Include="ToDo\IRequireAuthentication.cs" />
     <Compile Include="ToDo\List.cs" />
+    <Compile Include="ToDo\LoginEndpoint.cs" />
     <Compile Include="ToDo\Person.cs" />
+    <Compile Include="ToDo\RegistrationEndpoint.cs" />
+    <Compile Include="ToDo\ResetPasswordEndpoint.cs" />
     <Compile Include="ToDo\ToDoListEndpoint.cs" />
   </ItemGroup>
   <ItemGroup>
